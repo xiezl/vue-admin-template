@@ -3,17 +3,21 @@
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <breadcrumb />
     <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-        <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-        <i class="el-icon-caret-bottom"/>
-      </div>
+      <el-badge :hidden="roles[0] === 'admin'" :value="12" class="item">
+        <div class="avatar-wrapper">
+          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <i class="el-icon-caret-bottom"/>
+        </div>
+      </el-badge>
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
-        <router-link class="inlineBlock" to="/">
-          <el-dropdown-item>
-            Home
+        <router-link class="inlineBlock" to="/notification">
+          <el-dropdown-item v-if="roles[0] === 'editor'" class="clear-fix">
+            Notification
+            <el-badge :value="12" class="mark"/>
           </el-dropdown-item>
         </router-link>
-        <el-dropdown-item divided>
+        <!-- <el-dropdown-item divided> -->
+        <el-dropdown-item class="clear-fix">
           <span style="display:block;" @click="logout">LogOut</span>
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -34,7 +38,8 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'roles'
     ])
   },
   methods: {
@@ -78,8 +83,8 @@ export default {
       position: relative;
       line-height: initial;
       .user-avatar {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
         border-radius: 10px;
       }
       .el-icon-caret-bottom {
