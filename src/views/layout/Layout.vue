@@ -3,7 +3,7 @@
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <sidebar class="sidebar-container"/>
     <div class="main-container">
-      <navbar/>
+      <navbar v-if="reset"/>
       <app-main/>
     </div>
   </div>
@@ -21,6 +21,11 @@ export default {
     AppMain
   },
   mixins: [ResizeMixin],
+  data() {
+    return {
+      reset: true
+    }
+  },
   computed: {
     sidebar() {
       return this.$store.state.app.sidebar
@@ -35,6 +40,14 @@ export default {
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
+    }
+  },
+  watch: {
+    '$route'(to) {
+      this.reset = false
+      this.$nextTick(() => {
+        this.reset = true
+      })
     }
   },
   methods: {

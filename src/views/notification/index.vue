@@ -14,7 +14,7 @@
       </el-table-column>
       <el-table-column align="center" label="orderId" width="80">
         <template slot-scope="scope">
-          <el-button type="text" @click="goOrderDetail(order.row)">{{ scope.row.id }}</el-button>
+          <el-button type="text" @click="goOrderDetail(scope.row)">{{ scope.row.order_id }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="createTime" align="center" width="100">
@@ -81,11 +81,11 @@ export default {
     },
     markAsRead(msg) {
       markRead(msg.id).then(response => {
-        console.log(response)
         this.fetchData(this.currentPage - 1)
       })
     },
-    goOrderDetail(order) {
+    goOrderDetail(msg) {
+      const order = { id: msg.order_id }
       this.$router.push({ name: 'orderDetail', params: { order: order }})
     },
     handleCurrentChange(pageNum) {

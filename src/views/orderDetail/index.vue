@@ -154,7 +154,7 @@
         <p> {{ order.upload_time }} </p>
       </el-col>
     </el-row>
-    <el-row v-else>
+    <el-row v-else-if="roles[0] !== 'admin'">
       <el-col :sm="smSpan" :xs="xsSpan">
         <p class="item"> Upload the assignment: </p>
       </el-col>
@@ -173,14 +173,17 @@
       </el-col>
     </el-row>
     <el-row v-for="msg in msgList" :key="msg.id" class="message">
-      <el-alert
-        :title="msg.content"
-        :closable="false"
-        type="warning"
-      >
-        <p class="item">MessageTime: {{ msg.create_time | date }}</p>
-        <p class="item">File: <el-button v-if="msg.file" type="text" @click="downloadFile(msg.file)">{{ msg.file.file_name }}</el-button></p>
-      </el-alert>
+      <el-col :sm="smSpan * 2" :xs="xsSpan + 4">
+        <el-alert
+          :title="msg.content"
+          type="warning"
+          close-text="delete"
+          @close="deleteMsg(msg.id)"
+        >
+          <p class="item">MessageTime: {{ msg.create_time | date }}</p>
+          <p class="item">File: <el-button v-if="msg.file" type="text" @click="downloadFile(msg.file)">{{ msg.file.file_name }}</el-button></p>
+        </el-alert>
+      </el-col>
     </el-row>
     <el-row>
       <el-col :sm="smSpan" :xs="xsSpan">
@@ -212,7 +215,7 @@
 </template>
 
 <script>
-import { getOrderDetail, getDiscussion, getFileId, sendDiscussion, completeOrder, deleteOrder } from '@/api/table'
+import { getOrderDetail, getDiscussion, getFileId, sendDiscussion, completeOrder, deleteOrder, deleteDiscussion } from '@/api/table'
 import { convertDate } from '@/utils/date'
 import { mapGetters } from 'vuex'
 
@@ -230,7 +233,6 @@ export default {
     }
   },
   data() {
-    console.log(this.$route)
     return {
       form: {},
       submissionForm: {},
@@ -257,18 +259,21 @@ export default {
     const order = this.$route.params.order
     getOrderDetail(order.id).then(response => {
       this.order = response.data
-      // console.log(response)
+    }).catch(err => {
+      console.log(err)
+      this.$message({
+        message: 'Login failed. Please relogin',
+        type: 'error'
+      })
+      this.$router.push({ path: '/login' })
     })
     const data = { order_id: order.id }
     getDiscussion(data).then(response => {
       this.msgList = response.data
-      // console.log(response)
     })
   },
   methods: {
     onSubmit() {
-      console.log(this.message)
-      console.log(this.params)
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -280,21 +285,25 @@ export default {
       }
       if (this.hasFile) {
         getFileId(this.params, config).then(response => {
-          console.log(response)
           data.file_id = response.data.id
           sendDiscussion(data).then(r => {
             this.hasFile = false
-            console.log(r)
+            const data = { order_id: this.order.id }
+            getDiscussion(data).then(response => {
+              this.msgList = response.data
+            })
           })
         })
       } else {
         sendDiscussion(data).then(response => {
-          console.log(response)
+          const data = { order_id: this.order.id }
+          getDiscussion(data).then(response => {
+            this.msgList = response.data
+          })
         })
       }
     },
     completeOrder() {
-      console.log(this.submissionParams)
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -303,11 +312,12 @@ export default {
       const data = {}
       if (this.hasSubmissionFile) {
         getFileId(this.submissionParams, config).then(response => {
-          console.log(response)
           data.file_id = response.data.id
           completeOrder(this.order.id, data).then(r => {
             this.hasSubmissionFile = false
-            console.log(r)
+            getOrderDetail(this.order.id).then(res => {
+              this.order = res.data
+            })
           })
         })
       }
@@ -320,17 +330,12 @@ export default {
       this.params = new FormData()
       this.params.append('file', file)
       this.hasFile = true
-      console.log(file)
     },
     selectedSubmissionFile(e) {
       const file = e.file
       this.submissionParams = new FormData()
       this.submissionParams.append('file', file)
       this.hasSubmissionFile = true
-      console.log(file)
-      for (e of this.submissionParams.values()) {
-        console.log(e)
-      }
     },
     removeFile(file, fileList) {
       this.hasFile = false
@@ -348,6 +353,18 @@ export default {
           type: 'success'
         })
         this.$router.go(-1)
+      })
+    },
+    deleteMsg(msgId) {
+      deleteDiscussion(msgId).then(response => {
+        this.$message({
+          message: 'delete succeed',
+          type: 'success'
+        })
+        const data = { order_id: this.order.id }
+        getDiscussion(data).then(response => {
+          this.msgList = response.data
+        })
       })
     }
   }

@@ -44,12 +44,14 @@
       <el-date-picker
         v-model="scheduled_time"
         type="datetime"
+        value-format="timestamp"
         placeholder="Select Time" /></p>
 
     <p> Due Time<span style="color: red">*</span>:
       <el-date-picker
         v-model="due_time"
         type="datetime"
+        value-format="timestamp"
         placeholder="Select Time" /></p>
 
     <p> Subject<span style="color: red">*</span>: <el-input v-model="order.subject"> {{ order.subject }}</el-input></p>
@@ -128,7 +130,6 @@ export default {
     }
   },
   data() {
-    console.log(this.$route)
     return {
       order: null,
       edit: false,
@@ -151,12 +152,10 @@ export default {
   methods: {
     fetchData() {
       const order = this.$route.params.order
-      console.log(order)
       if (order) {
         getOrderDetail(order.id).then(response => {
           this.order = response.data
           this.edit = true
-          // console.log(response)
         })
       } else {
         this.order = defaultOrder
@@ -167,16 +166,21 @@ export default {
       window.location.href = `http://192.168.0.100:8808/file/${file.id}`
     },
     submitOrder() {
-      console.log(this.order)
-      console.log(this.edit)
       const order = this.order
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       }
-      if (this.scheduled_time) order.scheduled_time = this.scheduled_time.format('yyyy-MM-dd hh:mm:ss')
-      if (this.due_time) order.due_time = this.due_time.format('yyyy-MM-dd hh:mm:ss')
+      if (this.scheduled_time) {
+        const date = new Date(this.scheduled_time)
+        order.scheduled_time = date.format('yyyy-MM-dd hh:mm:ss')
+      }
+      if (this.due_time) {
+        const date = new Date(this.due_time)
+        order.due_time = date.format('yyyy-MM-dd hh:mm:ss')
+      }
+      console.log(order)
       if (!this.edit) {
         const flag = this.validate()
         if (!flag) {
@@ -189,44 +193,37 @@ export default {
         if (this.hasFile && this.hasPreviewFile) {
           getFileId(this.params, config).then(detailFileRes => {
             order.detail_file_id = detailFileRes.data.id
-            console.log(detailFileRes)
             getFileId(this.previewParams, config).then(previewFileRes => {
               order.preview_file_id = previewFileRes.data.id
-              console.log(previewFileRes)
               addOrder(order).then(response => {
                 this.$message({
                   message: 'Successfully add order',
                   type: 'success'
                 })
                 this.$router.push({ name: 'orderDetail', params: { order: response.data }})
-                console.log(response)
               })
             })
           })
         } else if (this.hasFile) {
           getFileId(this.params, config).then(detailFileRes => {
             order.detail_file_id = detailFileRes.data.id
-            console.log(detailFileRes)
             addOrder(order).then(response => {
               this.$message({
                 message: 'Successfully add order',
                 type: 'success'
               })
               this.$router.push({ name: 'orderDetail', params: { order: response.data }})
-              console.log(response)
             })
           })
         } else if (this.hasPreviewFile) {
           getFileId(this.previewParams, config).then(previewFileRes => {
             order.preview_file_id = previewFileRes.data.id
-            console.log(previewFileRes)
             addOrder(order).then(response => {
               this.$message({
                 message: 'Successfully add order',
                 type: 'success'
               })
               this.$router.push({ name: 'orderDetail', params: { order: response.data }})
-              console.log(response)
             })
           })
         } else {
@@ -235,7 +232,6 @@ export default {
               message: 'Successfully add order',
               type: 'success'
             })
-            console.log(response)
             this.$router.push({ name: 'orderDetail', params: { order: response.data }})
           })
         }
@@ -243,7 +239,6 @@ export default {
         if (this.hasFile && this.hasPreviewFile) {
           getFileId(this.params, config).then(detailFileRes => {
             order.detail_file_id = detailFileRes.data.id
-            console.log(detailFileRes)
             getFileId(this.previewParams, config).then(previewFileRes => {
               order.preview_file_id = previewFileRes.data.id
               editOrder(order).then(response => {
@@ -252,7 +247,6 @@ export default {
                   type: 'success'
                 })
                 this.$router.push({ name: 'orderDetail', params: { order: response.data }})
-                console.log(response)
               })
             })
           })
@@ -265,7 +259,6 @@ export default {
                 type: 'success'
               })
               this.$router.push({ name: 'orderDetail', params: { order: response.data }})
-              console.log(response)
             })
           })
         } else if (this.hasPreviewFile) {
@@ -277,7 +270,6 @@ export default {
                 type: 'success'
               })
               this.$router.push({ name: 'orderDetail', params: { order: response.data }})
-              console.log(response)
             })
           })
         } else {
@@ -286,7 +278,6 @@ export default {
               message: 'Successfully edit order',
               type: 'success'
             })
-            console.log(response)
             this.$router.push({ name: 'orderDetail', params: { order: response.data }})
           })
         }
@@ -297,7 +288,6 @@ export default {
       this.params = new FormData()
       this.params.append('file', file)
       this.hasFile = true
-      console.log(file)
     },
     removeFile(file, fileList) {
       this.hasFile = false
@@ -307,7 +297,6 @@ export default {
       this.previewParams = new FormData()
       this.previewParams.append('file', file)
       this.hasPreviewFile = true
-      console.log(file)
     },
     removePreviewFile(file, fileList) {
       this.hasPreviewFile = false
@@ -323,7 +312,6 @@ export default {
       })
     },
     validate() {
-      console.log('validate')
       return this.hasFile && this.order.scheduled_time && this.order.due_time && this.order.subject && this.order.word
     }
   }

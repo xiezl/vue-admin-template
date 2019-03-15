@@ -7,5 +7,9 @@ export function count(data) {
     if (e.marks) marks_num += e.marks
     if (e.bonus) bonus_num += e.bonus
   })
-  return { countWord: word_num, avgMarks: marks_num / data.length, countBonus: bonus_num }
+  return {
+    countWord: word_num,
+    avgMarks: data.length ? marks_num / data.length : 0,
+    countBonus: bonus_num
+  }
 }

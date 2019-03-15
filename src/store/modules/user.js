@@ -33,6 +33,7 @@ const user = {
         login(username, userInfo.password).then(response => {
           console.log(response)
           const data = response.data
+          console.log(data)
           setToken(data.token)
           const roles = []
           roles.push(data.role)

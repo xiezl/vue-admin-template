@@ -335,9 +335,9 @@ export default {
       completeListLoading: true,
       orderList: null,
       orderListLoading: true,
-      wordCount: null,
-      avgMarks: null,
-      bonusCount: null,
+      wordCount: 0,
+      avgMarks: 0,
+      bonusCount: 0,
       showTable: false,
       selectedWriter: null,
       selectedMonth: null,
@@ -376,7 +376,6 @@ export default {
       this.orderListLoading = true
       const data = { page: pageNum }
       getAllOrder(data).then(response => {
-        console.log(response)
         this.orderList = response.data.data
         this.currentPage = response.data.page + 1
         this.totalPage = response.data.total_page
@@ -388,7 +387,6 @@ export default {
     },
     fetchData(pageNum) {
       const role = store.getters.roles
-      console.log(role)
       if (role[0] !== 'admin') {
         this.fetchWriterData(pageNum)
       } else {
@@ -396,15 +394,12 @@ export default {
       }
     },
     goOrderDetail(order) {
-      console.log(order)
       this.$router.push({ name: 'orderDetail', params: { order: order }})
     },
     downloadFile(file) {
       window.location.href = `http://192.168.0.100:8808/file/${file.id}`
     },
     submitWriter() {
-      console.log(this.selectedWriter)
-      console.log(this.selectedMonth)
       this.completeListLoading = true
       this.completeList = []
       const date = this.selectedMonth
@@ -431,7 +426,6 @@ export default {
       const data3 = { status: 2, year: date.getFullYear(), month: date.getMonth() + 1 }
       getOrderList(data3).then(response => {
         const result = count(response.data.data)
-        console.log(result)
         this.wordCount = result.countWord
         this.avgMarks = result.avgMarks
         this.bonusCount = result.countBonus
@@ -440,13 +434,11 @@ export default {
       })
     },
     changePwd() {
-      console.log(this.selectedWriter)
       const data = {
         password: this.pwdToChange
       }
       const id = this.selectedWriter
       changeWriterPwd(id, data).then(response => {
-        console.log(response)
         this.$message({
           message: 'Change Succeed',
           type: 'success'
@@ -461,7 +453,6 @@ export default {
         password: this.newUserPwd
       }
       addWriter(user).then(response => {
-        console.log(response)
         this.$message({
           message: 'Adding new user succeed',
           type: 'success'

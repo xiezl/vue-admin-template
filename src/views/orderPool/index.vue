@@ -73,7 +73,8 @@
         <template slot-scope="scope">
           <el-row>
             <el-col :span="6">
-              <el-button type="primary" @click="acceptOrder(scope.row)"> Accept Order</el-button>
+              <el-button v-if="!scope.row.has_accepted" type="primary" @click="acceptOrder(scope.row)"> Accept Order</el-button>
+              <el-button v-else type="primary" disabled> Accept Order</el-button>
             </el-col>
           </el-row>
         </template>
@@ -115,15 +116,34 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList(this.listQuery).then(response => {
+      getList().then(response => {
         this.list = response.data
         this.listLoading = false
       })
     },
     acceptOrder(row) {
-      // console.log(row)
       acceptOrder(row.id).then(response => {
-        // console.log(response)
+        this.$message({
+          message: 'Accept Succeed',
+          type: 'success'
+        })
+        this.listLoading = true
+        getList().then(response => {
+          const originList = response.data
+          const list = []
+          if (this.subjectCode) {
+            originList.forEach(element => {
+              if (element.subject === this.subjectCode) {
+                list.push(element)
+              }
+            })
+            this.list = list
+            this.listLoading = false
+          } else {
+            this.list = originList
+            this.listLoading = false
+          }
+        })
       })
     },
     assignOrder(row) {
@@ -131,9 +151,12 @@ export default {
         writer_username: row.value
       }
       assignOrder(row.id, data).then(response => {
-        // console.log(response)
+        this.$message({
+          message: 'Assign Succeed',
+          type: 'success'
+        })
+        this.fetchData()
       })
-      // console.log(row)
     },
     goOrderDetail(order) {
       this.$router.push({ name: 'orderDetail', params: { order: order }})
@@ -148,8 +171,6 @@ export default {
       let originList = []
       getList().then(response => {
         originList = response.data
-        console.log(this.subjectCode)
-        console.log(this.subjectCode)
         if (this.subjectCode) {
           originList.forEach(element => {
             if (element.subject === this.subjectCode) {

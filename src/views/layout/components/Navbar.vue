@@ -53,7 +53,8 @@ export default {
     const role = store.getters.roles
     if (role[0] !== 'admin') {
       getMsgNum().then(response => {
-        console.log(response)
+        // console.log(response)
+        console.log('re2')
         this.msgNum = response.data.number
       })
     }

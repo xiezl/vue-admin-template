@@ -169,6 +169,14 @@ export function sendDiscussion(data, params) {
   })
 }
 
+export function deleteDiscussion(id, params) {
+  return request({
+    url: `/discussion/${id}`,
+    method: 'delete',
+    params
+  })
+}
+
 export function getMsgNum(params) {
   return request({
     url: '/message/unread_num',
