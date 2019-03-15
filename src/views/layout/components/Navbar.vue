@@ -5,9 +5,8 @@
     <el-dropdown class="avatar-container" trigger="click">
       <el-badge :hidden="roles[0] === 'admin'" :value="msgNum" class="item">
         <div class="avatar-wrapper">
-          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
           <img class="user-avatar">
-          <i class="el-icon-caret-bottom"/>
+          <i class="el-icon-cart-bottom"/>
         </div>
       </el-badge>
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -46,6 +45,7 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
+      'avatar',
       'roles'
     ])
   },
@@ -53,8 +53,7 @@ export default {
     const role = store.getters.roles
     if (role[0] !== 'admin') {
       getMsgNum().then(response => {
-        // console.log(response)
-        console.log('re2')
+        console.log(response)
         this.msgNum = response.data.number
       })
     }

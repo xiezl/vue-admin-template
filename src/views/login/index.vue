@@ -40,14 +40,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
+        callback(new Error('Please enter the correct username'))
       } else {
         callback()
       }
     }
     const validatePass = (rule, value, callback) => {
-      if (value.length < 2) {
-        callback(new Error('密码不能小于2位'))
+      if (value.length < 0) {
+        callback(new Error('Please enter the correct password'))
       } else {
         callback()
       }
