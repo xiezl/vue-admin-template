@@ -17,7 +17,7 @@
         <p class="item"> Order Status:</p>
       </el-col>
       <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
-        <p> {{ order.status }} </p>
+        <p> {{ statusToString(order.status) }} </p>
       </el-col>
     </el-row>
     <el-row>
@@ -366,6 +366,18 @@ export default {
           this.msgList = response.data
         })
       })
+    },
+    statusToString(status) {
+      if (status === 0) {
+        return 'Unassigned'
+      }
+      if (status === 1) {
+        return 'In Progress'
+      }
+      if (status === 2) {
+        return 'submitted'
+      }
+      return ''
     }
   }
 }

@@ -7,17 +7,17 @@
       border
       fit
       highlight-current-row>
-      <el-table-column align="center" label="updateTime" width="100">
+      <el-table-column align="center" label="Update Time" width="100">
         <template slot-scope="scope">
           {{ scope.row.update_time }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="orderId" width="80">
+      <el-table-column align="center" label="Order ID" width="80">
         <template slot-scope="scope">
           <el-button type="text" @click="goOrderDetail(scope.row)">{{ scope.row.order_id }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="createTime" align="center" width="100">
+      <el-table-column label="Create Time" align="center" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.create_time }}</span>
         </template>

@@ -11,47 +11,47 @@
       border
       fit
       highlight-current-row>
-      <el-table-column align="center" label="orderID" width="95">
+      <el-table-column align="center" label="Order ID" width="95">
         <template slot-scope="order">
           <el-button type="text" @click="goOrderDetail(order.row)">{{ order.row.id }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="scheduledTime">
+      <el-table-column align="center" label="Scheduled Time">
         <template slot-scope="order">
           {{ order.row.scheduled_time }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="subject">
+      <el-table-column align="center" label="Subject">
         <template slot-scope="order">
           {{ order.row.subject }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="wordCount">
+      <el-table-column align="center" label="Words">
         <template slot-scope="order">
           {{ order.row.word }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="detailFile">
+      <el-table-column align="center" label="Detail File">
         <template slot-scope="order">
           <el-button v-if="order.row.detail_file" type="text" @click="downloadFile(order.row.detail_file)">{{ order.row.detail_file.file_name }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="detailFilePreview">
+      <el-table-column align="center" label="Preview File">
         <template slot-scope="order">
           <el-button v-if="order.row.preview_file" type="text" @click="downloadFile(order.row.preview_file)">{{ order.row.preview_file.file_name }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="numberOfViews">
+      <el-table-column align="center" label="Number of Views">
         <template slot-scope="order">
           <span v-if="order.row.preview_file">{{ order.row.preview_file.download_times }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="bonus">
+      <el-table-column align="center" label="Bonus">
         <template slot-scope="order">
           {{ order.row.bonus }}
         </template>
       </el-table-column>
-      <el-table-column v-if="roles[0] === 'admin'" align="center" label="writerOperation" width="300">
+      <el-table-column v-if="roles[0] === 'admin'" align="center" label="Assign Order" width="300">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="16">
@@ -69,7 +69,7 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column v-else align="center" label="adminOperation">
+      <el-table-column v-else align="center" label="Accept Order">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="6">

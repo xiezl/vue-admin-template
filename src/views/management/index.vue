@@ -13,37 +13,37 @@
             border
             fit
             highlight-current-row>
-            <el-table-column align="center" label="orderID" width="95">
+            <el-table-column align="center" label="Order ID" width="95">
               <template slot-scope="order">
                 <el-button type="text" @click="goOrderDetail(order.row)">{{ order.row.id }}</el-button>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="scheduledTime">
+            <el-table-column align="center" label="Scheduled Time">
               <template slot-scope="order">
                 {{ order.row.scheduled_time }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="subject">
+            <el-table-column align="center" label="Subject">
               <template slot-scope="order">
                 {{ order.row.subject }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="wordCount">
+            <el-table-column align="center" label="Words">
               <template slot-scope="order">
                 {{ order.row.word }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="detailFile">
+            <el-table-column align="center" label="Detail File">
               <template slot-scope="order">
                 <el-button v-if="order.row.detail_file" type="text" @click="downloadFile(order.row.detail_file)">{{ order.row.detail_file.file_name }}</el-button>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="remainingTime">
+            <el-table-column align="center" label="Remaining Time">
               <template slot-scope="order">
-                {{ order.row.remain_time }}
+                {{ formatMinutes(order.row.remain_time) }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="bonus">
+            <el-table-column align="center" label="Bonus">
               <template slot-scope="order">
                 {{ order.row.bonus }}
               </template>
@@ -70,52 +70,52 @@
             border
             fit
             highlight-current-row>
-            <el-table-column align="center" label="orderID" width="95">
+            <el-table-column align="center" label="Order ID" width="95">
               <template slot-scope="order">
                 <el-button type="text" @click="goOrderDetail(order.row)">{{ order.row.id }}</el-button>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="scheduledTime">
+            <el-table-column align="center" label="Scheduled Time">
               <template slot-scope="order">
                 <p :style="order.row.over_due > 0 ? 'color: red' : ''">
                   {{ order.row.scheduled_time }}
                 </p>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="subject">
+            <el-table-column align="center" label="Subject">
               <template slot-scope="order">
                 <p :style="order.row.over_due > 0 ? 'color: red' : ''">
                   {{ order.row.subject }}
                 </p>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="wordCount">
+            <el-table-column align="center" label="Words">
               <template slot-scope="order">
                 <p :style="order.row.over_due > 0 ? 'color: red' : ''">
                   {{ order.row.word }}
                 </p>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="detailFile">
+            <el-table-column align="center" label="Detail File">
               <template slot-scope="order">
                 <el-button v-if="order.row.detail_file" type="text" @click="downloadFile(order.row.detail_file)">{{ order.row.detail_file.file_name }}</el-button>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="overdueTime">
+            <el-table-column align="center" label="Overdue Time">
               <template slot-scope="order">
                 <p :style="order.row.over_due > 0 ? 'color: red' : ''">
-                  {{ order.row.over_due }}
+                  {{ formatMinutes(order.row.over_due) }}
                 </p>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="marks">
+            <el-table-column align="center" label="Marks">
               <template slot-scope="order">
                 <p :style="order.row.over_due > 0 ? 'color: red' : ''">
                   {{ order.row.marks }}
                 </p>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="bonus">
+            <el-table-column align="center" label="Bonus">
               <template slot-scope="order">
                 <p :style="order.row.over_due > 0 ? 'color: red' : ''">
                   {{ order.row.bonus }}
@@ -143,54 +143,54 @@
             border
             fit
             highlight-current-row>
-            <el-table-column align="center" label="orderID" width="95">
+            <el-table-column align="center" label="Order ID" width="95">
               <template slot-scope="order">
                 <el-button type="text" @click="goOrderDetail(order.row)">{{ order.row.id }}</el-button>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="scheduledTime">
+            <el-table-column align="center" label="Scheduled Time">
               <template slot-scope="order">
                 {{ order.row.scheduled_time }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="subject">
+            <el-table-column align="center" label="Subject">
               <template slot-scope="order">
                 {{ order.row.subject }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="wordCount">
+            <el-table-column align="center" label="Words">
               <template slot-scope="order">
                 {{ order.row.word }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="bonus">
+            <el-table-column align="center" label="Bonus">
               <template slot-scope="order">
                 {{ order.row.bonus }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="remainingTime">
+            <el-table-column align="center" label="Remaining Time">
               <template slot-scope="order">
-                {{ order.row.remain_time }}
+                {{ formatMinutes(order.row.remain_time) }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="marks">
+            <el-table-column align="center" label="Marks">
               <template slot-scope="order">
                 {{ order.row.marks }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="writer">
+            <el-table-column align="center" label="Writer">
               <template slot-scope="order">
                 <p v-if="order.row.writer">{{ order.row.writer.name }}</p>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="status">
+            <el-table-column align="center" label="Status">
               <template slot-scope="order">
-                {{ order.row.status }}
+                {{ statusToString(order.row.status) }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="overdueTime">
+            <el-table-column align="center" label="Overdue Time">
               <template slot-scope="order">
-                {{ order.row.over_due }}
+                {{ formatMinutes(order.row.over_due) }}
               </template>
             </el-table-column>
           </el-table>
@@ -227,52 +227,52 @@
               border
               fit
               highlight-current-row>
-              <el-table-column align="center" label="orderID" width="95">
+              <el-table-column align="center" label="Order ID" width="95">
                 <template slot-scope="order">
                   <el-button type="text" @click="goOrderDetail(order.row)">{{ order.row.id }}</el-button>
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="scheduledTime">
+              <el-table-column align="center" label="Scheduled Time">
                 <template slot-scope="order">
                   <p :style="order.row.over_due > 0 ? 'color: red' : ''">
                     {{ order.row.scheduled_time }}
                   </p>
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="subject">
+              <el-table-column align="center" label="Subject">
                 <template slot-scope="order">
                   <p :style="order.row.over_due > 0 ? 'color: red' : ''">
                     {{ order.row.subject }}
                   </p>
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="wordCount">
+              <el-table-column align="center" label="Words">
                 <template slot-scope="order">
                   <p :style="order.row.over_due > 0 ? 'color: red' : ''">
                     {{ order.row.word }}
                   </p>
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="detailFile">
+              <el-table-column align="center" label="Detail File">
                 <template slot-scope="order">
                   <el-button v-if="order.row.detail_file" type="text" @click="downloadFile(order.row.detail_file)">{{ order.row.detail_file.file_name }}</el-button>
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="overdueTime">
+              <el-table-column align="center" label="Overdue Time">
                 <template slot-scope="order">
                   <p :style="order.row.over_due > 0 ? 'color: red' : ''">
-                    {{ order.row.over_due }}
+                    {{ formatMinutes(order.row.over_due) }}
                   </p>
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="marks">
+              <el-table-column align="center" label="Marks">
                 <template slot-scope="order">
                   <p :style="order.row.over_due > 0 ? 'color: red' : ''">
                     {{ order.row.marks }}
                   </p>
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="bonus">
+              <el-table-column align="center" label="Bonus">
                 <template slot-scope="order">
                   <p :style="order.row.over_due > 0 ? 'color: red' : ''">
                     {{ order.row.bonus }}
@@ -462,6 +462,34 @@ export default {
     handleCurrentChange(pageNum) {
       this.currentPage = pageNum
       this.fetchData(pageNum - 1)
+    },
+    statusToString(status) {
+      if (status === 0) {
+        return 'Unassigned'
+      }
+      if (status === 1) {
+        return 'In Progress'
+      }
+      if (status === 2) {
+        return 'submitted'
+      }
+      return ''
+    },
+    formatMinutes(minutes) {
+      if (minutes == null || minutes === 0) {
+        return ''
+      }
+      const days = Math.floor(minutes / (60 * 24))
+      minutes %= 60 * 24
+      const hours = Math.floor(minutes / 60)
+      minutes %= 60
+      if (days > 0) {
+        return `${days} Days ${hours} Hours ${minutes} Minutes`
+      } else if (hours > 0) {
+        return `${hours} Hours ${minutes} Minutes`
+      } else {
+        return `${minutes} Minutes`
+      }
     }
   }
 }
