@@ -27,7 +27,7 @@
           {{ scope.row.content }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Read" width="100">
+      <el-table-column align="center" label="Read" width="180">
         <template slot-scope="scope">
           <p v-if="scope.row.has_read">Read</p>
           <el-button v-else type="primary" @click.prevent="markAsRead(scope.row)">Mark as read</el-button>
