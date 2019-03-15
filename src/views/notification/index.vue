@@ -7,33 +7,43 @@
       border
       fit
       highlight-current-row>
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column align="center" label="updateTime" width="100">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.row.update_time }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column align="center" label="orderId" width="80">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          <el-button type="text" @click="goOrderDetail(order.row)">{{ scope.row.id }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="createTime" align="center" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.create_time }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Time" width="200">
+      <el-table-column label="Content">
         <template slot-scope="scope">
-          <i class="el-icon-time"/>
-          <span>{{ scope.row.display_time }}</span>
+          {{ scope.row.content }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="Read" width="100">
+        <template slot-scope="scope">
+          <p v-if="scope.row.has_read">Read</p>
+          <el-button v-else type="primary" @click.prevent="markAsRead(scope.row)">Mark as read</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      :page-count="totalPage"
+      background
+      layout="prev, pager, next"
+      @current-change="handleCurrentChange" />
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getMsgList, markRead } from '@/api/table'
 
 export default {
   filters: {
@@ -49,19 +59,37 @@ export default {
   data() {
     return {
       list: null,
-      listLoading: true
+      listLoading: true,
+      currentPage: 1,
+      totalPage: 1
     }
   },
   created() {
-    this.fetchData()
+    this.fetchData(0)
   },
   methods: {
-    fetchData() {
+    fetchData(pageNum) {
       this.listLoading = true
-      getList(this.listQuery).then(response => {
-        this.list = response.data.items
+      const data = { page: pageNum }
+      getMsgList(data).then(response => {
+        this.list = response.data.data
+        this.currentPage = response.data.page
+        this.totalPage = response.data.total_page
         this.listLoading = false
       })
+    },
+    markAsRead(msg) {
+      markRead(msg.id).then(response => {
+        console.log(response)
+        this.fetchData(this.currentPage - 1)
+      })
+    },
+    goOrderDetail(order) {
+      this.$router.push({ name: 'orderDetail', params: { order: order }})
+    },
+    handleCurrentChange(pageNum) {
+      this.currentPage = pageNum
+      this.fetchData(pageNum - 1)
     }
   }
 }

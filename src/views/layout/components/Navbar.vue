@@ -3,7 +3,7 @@
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <breadcrumb />
     <el-dropdown class="avatar-container" trigger="click">
-      <el-badge :hidden="roles[0] === 'admin'" :value="12" class="item">
+      <el-badge :hidden="roles[0] === 'admin'" :value="msgNum" class="item">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
@@ -11,9 +11,9 @@
       </el-badge>
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
         <router-link class="inlineBlock" to="/notification">
-          <el-dropdown-item v-if="roles[0] === 'editor'" class="clear-fix">
+          <el-dropdown-item v-if="roles[0] !== 'admin'" class="clear-fix">
             Notification
-            <el-badge :value="12" class="mark"/>
+            <el-badge :value="msgNum" class="mark"/>
           </el-dropdown-item>
         </router-link>
         <!-- <el-dropdown-item divided> -->
@@ -26,7 +26,9 @@
 </template>
 
 <script>
+import { getMsgNum } from '@/api/table'
 import { mapGetters } from 'vuex'
+import store from '@/store'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
@@ -35,12 +37,26 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      msgNum: null
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar',
       'roles'
     ])
+  },
+  created() {
+    const role = store.getters.roles
+    if (role[0] !== 'admin') {
+      getMsgNum().then(response => {
+        console.log(response)
+        this.msgNum = response.data.number
+      })
+    }
   },
   methods: {
     toggleSideBar() {

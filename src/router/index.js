@@ -81,6 +81,13 @@ export const constantRouterMap = [
           meta: { breadcrumb: false },
           hidden: true,
           component: () => import('@/views/orderDetail/index')
+        },
+        {
+          path: 'editOrder',
+          name: 'editOrder',
+          meta: { breadcrumb: false },
+          hidden: true,
+          component: () => import('@/views/editOrder/index')
         }]
       },
       // {

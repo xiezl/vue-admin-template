@@ -1,6 +1,7 @@
 import request from '@/utils/request'
 
 export function login(username, password) {
+  console.log(process.env.BASE_API)
   return request({
     url: '/user/login',
     method: 'post',
@@ -11,13 +12,13 @@ export function login(username, password) {
   })
 }
 
-export function getInfo(token) {
-  return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
+// export function getInfo(token) {
+//   return request({
+//     url: '/user/info',
+//     method: 'get',
+//     params: { token }
+//   })
+// }
 
 export function logout() {
   return request({

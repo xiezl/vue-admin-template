@@ -50,8 +50,8 @@ export default {
       }
     }
     const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于5位'))
+      if (value.length < 2) {
+        callback(new Error('密码不能小于2位'))
       } else {
         callback()
       }
@@ -88,12 +88,15 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
+        console.log(valid)
         if (valid) {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(() => {
+            console.log('succeed')
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
           }).catch(() => {
+            console.log('failed')
             this.loading = false
           })
         } else {
