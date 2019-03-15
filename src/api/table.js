@@ -91,6 +91,14 @@ export function getOrderDetail(id, params) {
   })
 }
 
+export function deleteOrder(id, params) {
+  return request({
+    url: `/order/${id}`,
+    method: 'delete',
+    params
+  })
+}
+
 export function completeOrder(id, params) {
   return request({
     url: `/order/${id}/upload`,

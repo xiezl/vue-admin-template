@@ -1,27 +1,164 @@
 <template>
   <div v-if="order" class="app-container">
-    <el-button type="primary" @click.prevent="goEditPage"> Edit </el-button>
-    <p><span class="item">Order Id:</span>{{ order.id }} </p>
-    <p> Order Status: {{ order.status }} </p>
-    <p> Detail File: <el-button v-if="order.detail_file" type="text" @click="downloadFile(order.detail_file)">{{ order.detail_file.file_name }}</el-button> </p>
-    <p> Preview File: <el-button v-if="order.preview_file" type="text" @click="downloadFile(order.preview_file)">{{ order.preview_file.file_name }}</el-button> </p>
-    <p> Scheduled Time: {{ order.scheduled_time }} </p>
-    <p> Due Time: {{ order.due_time }} </p>
-    <p> Subject: {{ order.subject }} </p>
-    <p> Word Count: {{ order.word }} </p>
-    <p> Bonus: {{ order.bonus }} </p>
-    <p> Special Requirement: {{ order.special_requirement }} </p>
-    <p> Update Time: {{ order.update_time }} </p>
-    <p> Overdue Time: {{ order.over_due }} </p>
-    <p> Marks: {{ order.marks }} </p>
-    <p> Feedback: {{ order.feedback }} </p>
-    <p v-if="order.writer"> Writer: {{ order.writer.name }}</p>
-    <p v-if="order.notes"> Notes: {{ order.notes }}</p>
-    <p v-if="order.quality_inspector"> Quality inspector: {{ order.quality_inspector }}</p>
-    <p v-if="order.uploaded_file"> Submission File: <el-button v-if="order.uploaded_file" type="text" @click="downloadFile(order.uploaded_file)">{{ order.uploaded_file.file_name }}</el-button> </p>
-    <p v-if="order.uploaded_file"> Submission Time: {{ order.upload_time }} </p>
-    <el-form v-else ref="submissionForm" :model="submissionForm" label-position="left" label-width="200px" @submit.native.prevent>
-      <el-form-item label="Upload the assignment">
+    <el-row v-if="roles[0] === 'admin'">
+      <el-button type="primary" @click.prevent="goEditPage"> Edit </el-button>
+      <el-button type="danger" @click.prevent="deleteOrder()"> Delete </el-button>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item">Order Id:</p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p>{{ order.id }}</p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Order Status:</p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.status }} </p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Detail File:</p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <el-button v-if="order.detail_file" type="text" @click="downloadFile(order.detail_file)">{{ order.detail_file.file_name }}</el-button>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Preview File: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <el-button v-if="order.preview_file" type="text" @click="downloadFile(order.preview_file)">{{ order.preview_file.file_name }}</el-button>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Scheduled Time:</p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p>{{ order.scheduled_time }} </p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Due Time:</p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.due_time }} </p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Subject:</p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.subject }} </p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Word Count:</p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.word }} </p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Bonus: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.bonus }} </p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Special Requirement: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.special_requirement }} </p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Update Time: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.update_time }} </p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Overdue Time: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.over_due }} </p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Marks: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.marks }} </p>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Feedback: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.feedback }} </p>
+      </el-col>
+    </el-row>
+    <el-row v-if="order.writer">
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Writer: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.writer.name }} </p>
+      </el-col>
+    </el-row>
+    <el-row v-if="order.notes">
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Notes: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.notes }} </p>
+      </el-col>
+    </el-row>
+    <el-row v-if="order.quality_inspector">
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Quality inspector: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.quality_inspector }} </p>
+      </el-col>
+    </el-row>
+    <el-row v-if="order.uploaded_file">
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Submission File: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <el-button v-if="order.uploaded_file" type="text" @click="downloadFile(order.uploaded_file)">{{ order.uploaded_file.file_name }}</el-button>
+      </el-col>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Submission Time: </p>
+      </el-col>
+      <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
+        <p> {{ order.upload_time }} </p>
+      </el-col>
+    </el-row>
+    <el-row v-else>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Upload the assignment: </p>
+      </el-col>
+      <el-col :sm="smSpan" :xs="xsSpan - 2">
         <el-upload
           :http-request="selectedSubmissionFile"
           :limit="1"
@@ -30,26 +167,34 @@
         >
           <div v-if="!hasSubmissionFile" class="el-upload__text"> Click here to upload </div>
         </el-upload>
-      </el-form-item>
-      <el-form-item>
+      </el-col>
+      <el-col :sm="20 - 2 * smSpan" :xs="xsSpan + 4">
         <el-button type="primary" @click.prevent="completeOrder()">Submit</el-button>
-      </el-form-item>
-    </el-form>
+      </el-col>
+    </el-row>
     <el-row v-for="msg in msgList" :key="msg.id" class="message">
       <el-alert
         :title="msg.content"
         :closable="false"
         type="warning"
       >
-        <p>MessageTime: {{ msg.create_time | date }}</p>
-        <p>File: <el-button v-if="msg.file" type="text" @click="downloadFile(msg.file)">{{ msg.file.file_name }}</el-button></p>
+        <p class="item">MessageTime: {{ msg.create_time | date }}</p>
+        <p class="item">File: <el-button v-if="msg.file" type="text" @click="downloadFile(msg.file)">{{ msg.file.file_name }}</el-button></p>
       </el-alert>
     </el-row>
-    <el-form ref="form" :model="form" label-position="left" label-width="200px" @submit.native.prevent>
-      <el-form-item label="Write a message">
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Writer a Message </p>
+      </el-col>
+      <el-col :sm="smSpan+2" :xs="xsSpan">
         <el-input v-model="message" type="textarea"/>
-      </el-form-item>
-      <el-form-item label="Upload a File">
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :sm="smSpan" :xs="xsSpan">
+        <p class="item"> Upload a File</p>
+      </el-col>
+      <el-col :sm="smSpan" :xs="xsSpan-2">
         <el-upload
           :http-request="selectedFile"
           :limit="1"
@@ -58,16 +203,16 @@
         >
           <div v-if="!hasFile" class="el-upload__text"> Click here to upload </div>
         </el-upload>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click.prevent="onSubmit()">Submit the message</el-button>
-      </el-form-item>
-    </el-form>
+      </el-col>
+      <el-col :sm="24 - 2 * smSpan" :xs="26 - 2 * xsSpan">
+        <el-button type="primary" @click.prevent="onSubmit()">Submit message</el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-import { getOrderDetail, getDiscussion, getFileId, sendDiscussion, completeOrder } from '@/api/table'
+import { getOrderDetail, getDiscussion, getFileId, sendDiscussion, completeOrder, deleteOrder } from '@/api/table'
 import { convertDate } from '@/utils/date'
 import { mapGetters } from 'vuex'
 
@@ -95,7 +240,9 @@ export default {
       params: null,
       hasFile: false,
       hasSubmissionFile: false,
-      submissionParams: null
+      submissionParams: null,
+      smSpan: 6,
+      xsSpan: 8
     }
   },
   computed: {
@@ -192,7 +339,16 @@ export default {
       this.hasSubmissionFile = false
     },
     goEditPage() {
-      this.$router.push({ name: 'orderDetailil', params: { order: this.order }})
+      this.$router.push({ name: 'editOrder', params: { order: this.order }})
+    },
+    deleteOrder() {
+      deleteOrder(this.order.id).then(response => {
+        this.$message({
+          message: 'delete succeed',
+          type: 'success'
+        })
+        this.$router.go(-1)
+      })
     }
   }
 }
@@ -209,20 +365,12 @@ p {
   height: 40px;
   line-height: 40px;
 }
-.el-form /deep/ .el-form-item__label {
-  font-weight: inherit;
-  font-size: inherit;
-  color: black;
-}
-.el-form /deep/ .el-textarea {
-  width: 300px;
-}
-.el-form /deep/ .el-textarea__inner {
-  min-height: 100px !important;
-}
 .item {
   font-weight: 600;
-  width: 100px;
+}
+.app-container /deep/ .el-row {
+  display: flex;
+  align-items: center;
 }
 </style>
 

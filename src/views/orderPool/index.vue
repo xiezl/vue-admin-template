@@ -54,9 +54,8 @@
       <el-table-column v-if="roles[0] === 'admin'" align="center" label="writerOperation" width="300">
         <template slot-scope="scope">
           <el-row>
-            <el-col :span="18">
-              <!-- <el-input v-model="scope.row.writerName" placeholder="请输入账户名"/> -->
-              <el-select v-model="scope.row.value" placeholder="请选择写手">
+            <el-col :span="16">
+              <el-select v-model="scope.row.value" placeholder="Please select writer">
                 <el-option
                   v-for="writer in scope.row.candidate_writers"
                   :key="writer.id"
@@ -64,7 +63,7 @@
                   :value="writer.username" />
               </el-select>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-button type="primary" @click="assignOrder(scope.row)"> Accept </el-button>
             </el-col>
           </el-row>
@@ -171,3 +170,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.app-container /deep/ .el-select {
+  width: 180px;
+}
+</style>

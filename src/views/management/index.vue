@@ -54,8 +54,15 @@
           <template slot="title">
             <h1> Completed Orders </h1>
           </template>
+          <el-date-picker
+            v-model="selectedMonth"
+            type="month"
+            format="yyyy-MM"
+            placeholder="Select Month" />
+          <el-button type="primary" @click.prevent="submitMonth()">Submit</el-button>
           <p> Word Count this month: {{ wordCount }}</p>
           <p> Average marks this month: {{ avgMarks }}</p>
+          <p> Bonus Count this month: {{ avgMarks }}</p>
           <el-table
             v-loading="completeListLoading"
             :data="completeList"
@@ -211,6 +218,7 @@
           <el-row v-if="showTable">
             <p> Word Count this month: {{ wordCount }}</p>
             <p> Average marks this month: {{ avgMarks }}</p>
+            <p> Total bonus this month: {{ bonusCount }}</p>
             <h1> Completed Orders </h1>
             <el-table
               v-loading="completeListLoading"
@@ -329,6 +337,7 @@ export default {
       orderListLoading: true,
       wordCount: null,
       avgMarks: null,
+      bonusCount: null,
       showTable: false,
       selectedWriter: null,
       selectedMonth: null,
@@ -356,27 +365,11 @@ export default {
   methods: {
     fetchWriterData(pageNum) {
       this.todolistLoading = true
-      this.completeLoading = true
+      this.completeListLoading = false
       const data1 = { status: 1 }
-      const data2 = { status: 2, page: pageNum }
-      const now = new Date()
-      const data3 = { status: 2, year: now.getUTCFullYear(), month: now.getUTCMonth() + 1 }
       getOrderList(data1).then(response => {
         this.todoList = response.data.data
         this.todoListLoading = false
-      })
-      getOrderList(data2).then(response => {
-        console.log(response)
-        this.completeList = response.data.data
-        this.currentPage = response.data.page + 1
-        this.totalPage = response.data.total_page
-        this.completeListLoading = false
-      })
-      getOrderList(data3).then(response => {
-        const result = count(response.data.data)
-        console.log(result)
-        this.wordCount = result.countWord
-        this.avgMarks = result.avgMarks
       })
     },
     fetchAdminData(pageNum) {
@@ -428,6 +421,22 @@ export default {
         const result = count(response.data.data)
         this.wordCount = result.countWord
         this.avgMarks = result.avgMarks
+        this.bonusCount = result.countBonus
+      })
+    },
+    submitMonth() {
+      this.completeList = []
+      this.completeListLoading = true
+      const date = this.selectedMonth
+      const data3 = { status: 2, year: date.getFullYear(), month: date.getMonth() + 1 }
+      getOrderList(data3).then(response => {
+        const result = count(response.data.data)
+        console.log(result)
+        this.wordCount = result.countWord
+        this.avgMarks = result.avgMarks
+        this.bonusCount = result.countBonus
+        this.completeList = response.data.data
+        this.completeListLoading = false
       })
     },
     changePwd() {

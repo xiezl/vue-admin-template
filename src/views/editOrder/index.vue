@@ -1,6 +1,6 @@
 <template>
   <div v-if="order" class="app-container">
-    <p> Detail File:
+    <p> Detail File<span style="color: red">*</span>:
       <span v-if="order.detail_file">
         <el-button type="text" @click="downloadFile(order.detail_file)">
           {{ order.detail_file.file_name }}
@@ -40,35 +40,37 @@
       </span>
     </p>
 
-    <p> Scheduled Time:
+    <p> Scheduled Time<span style="color: red">*</span>:
       <el-date-picker
-        v-model="order.scheduled_time"
+        v-model="scheduled_time"
         type="datetime"
-        value-format="yyyy-MM-DD HH:mm:ss"
         placeholder="Select Time" /></p>
 
-    <p> Due Time:
+    <p> Due Time<span style="color: red">*</span>:
       <el-date-picker
-        v-model="order.due_time"
+        v-model="due_time"
         type="datetime"
-        value-format="yyyy-MM-DD HH:mm:ss"
         placeholder="Select Time" /></p>
 
-    <p> Subject: <el-input v-model="order.subject"> {{ order.subject }}</el-input></p>
+    <p> Subject<span style="color: red">*</span>: <el-input v-model="order.subject"> {{ order.subject }}</el-input></p>
 
-    <p> Word Count: <el-input v-model="order.word"> {{ order.word }}</el-input></p>
+    <p> Word Count<span style="color: red">*</span>: <el-input v-model="order.word"> {{ order.word }}</el-input></p>
 
     <p> Bonus: <el-input v-model="order.bonus"> {{ order.bonus }}</el-input></p>
 
     <p> Special Requirement: <el-input v-model="order.special_requirement">{{ order.special_requirement }}</el-input></p>
 
-    <p> Marks: <el-input v-model="order.marks"> {{ order.marks }}</el-input></p>
+    <p> Additional Info: <el-input v-model="order.addition_info" type="textarea"> {{ order.addition_info }}</el-input></p>
 
-    <p> Feedback: <el-input v-model="order.feedback" type="textarea"> {{ order.feedback }}</el-input></p>
+    <el-row v-if="edit">
+      <p> Marks: <el-input v-model="order.marks"> {{ order.marks }}</el-input></p>
 
-    <p> Notes: <el-input v-model="order.notes"> {{ order.notes }}</el-input></p>
+      <p> Feedback: <el-input v-model="order.feedback" type="textarea"> {{ order.feedback }}</el-input></p>
 
-    <p> Quality inspector: <el-input v-model="order.quality_inspector"> {{ order.quality_inspector }}</el-input></p>
+      <p> Notes: <el-input v-model="order.notes"> {{ order.notes }}</el-input></p>
+
+      <p> Quality inspector: <el-input v-model="order.quality_inspector"> {{ order.quality_inspector }}</el-input></p>
+    </el-row>
     <el-button type="primary" @click.prevent="submitOrder"> Submit </el-button>
   </div>
 </template>
@@ -77,6 +79,28 @@
 import { getOrderDetail, addOrder, editOrder, getFileId, deleteDetailFile, deletePreviewFile } from '@/api/table'
 import { convertDate } from '@/utils/date'
 import { mapGetters } from 'vuex'
+
+// eslint-disable-next-line
+Date.prototype.format = function(fmt) {
+  const o = {
+    'M+': this.getMonth() + 1,
+    'd+': this.getDate(),
+    'h+': this.getHours(),
+    'm+': this.getMinutes(),
+    's+': this.getSeconds(),
+    'q+': Math.floor((this.getMonth() + 3) / 3),
+    'S': this.getMilliseconds()
+  }
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(RegExp.$1, (`${this.getFullYear()}`).substr(4 - RegExp.$1.length))
+  }
+  for (const k in o) {
+    if (new RegExp(`(${k})`).test(fmt)) {
+      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : ((`00${o[k]}`).substr((`${o[k]}`).length)))
+    }
+  }
+  return fmt
+}
 
 const defaultOrder = {
   scheduled_time: null,
@@ -111,7 +135,9 @@ export default {
       params: null,
       hasFile: false,
       previewParams: null,
-      hasPreviewFile: false
+      hasPreviewFile: false,
+      scheduled_time: null,
+      due_time: null
     }
   },
   computed: {
@@ -149,7 +175,17 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }
+      if (this.scheduled_time) order.scheduled_time = this.scheduled_time.format('yyyy-MM-dd hh:mm:ss')
+      if (this.due_time) order.due_time = this.due_time.format('yyyy-MM-dd hh:mm:ss')
       if (!this.edit) {
+        const flag = this.validate()
+        if (!flag) {
+          this.$message({
+            message: 'Please set the mendatory fields',
+            type: 'error'
+          })
+          return
+        }
         if (this.hasFile && this.hasPreviewFile) {
           getFileId(this.params, config).then(detailFileRes => {
             order.detail_file_id = detailFileRes.data.id
@@ -285,6 +321,10 @@ export default {
       deletePreviewFile(this.order.id).then(response => {
         this.fetchData()
       })
+    },
+    validate() {
+      console.log('validate')
+      return this.hasFile && this.order.scheduled_time && this.order.due_time && this.order.subject && this.order.word
     }
   }
 }

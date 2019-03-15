@@ -65,6 +65,7 @@ export default {
     }
   },
   created() {
+    this.currentPage = 1
     this.fetchData(0)
   },
   methods: {
@@ -73,7 +74,7 @@ export default {
       const data = { page: pageNum }
       getMsgList(data).then(response => {
         this.list = response.data.data
-        this.currentPage = response.data.page
+        this.currentPage = response.data.page + 1
         this.totalPage = response.data.total_page
         this.listLoading = false
       })
