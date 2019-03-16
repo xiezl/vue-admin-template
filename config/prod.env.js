@@ -2,5 +2,5 @@
 module.exports = {
   NODE_ENV: '"production"',
   // BASE_API: '"https://easy-mock.com/mock/5950a2419adc231f356a6636/vue-admin"',
-  BASE_API: '"http://192.168.0.100:8808"',
+  BASE_API: '"http://47.75.203.197:8808"',
 }

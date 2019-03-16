@@ -397,7 +397,7 @@ export default {
       this.$router.push({ name: 'orderDetail', params: { order: order }})
     },
     downloadFile(file) {
-      window.location.href = `http://192.168.0.100:8808/file/${file.id}`
+      window.location.href = `http://47.75.203.197:8808/file/${file.id}`
     },
     submitWriter() {
       this.completeListLoading = true

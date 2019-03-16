@@ -163,7 +163,7 @@ export default {
       }
     },
     downloadFile(file) {
-      window.location.href = `http://192.168.0.100:8808/file/${file.id}`
+      window.location.href = `http://47.75.203.197:8808/file/${file.id}`
     },
     submitOrder() {
       const order = this.order
