@@ -80,7 +80,7 @@ service.interceptors.response.use(
           location.reload()
         })
       })
-    } else {
+    } else if (error.response.status !== 403) {
       Message({
         message: error.message,
         type: 'error',

@@ -1,6 +1,6 @@
 <template>
   <div v-if="order" class="app-container">
-    <p> Detail File<span style="color: red">*</span>:
+    <p> Detail File<span v-if="!edit" style="color: red">*</span>:
       <span v-if="order.detail_file">
         <el-button type="text" @click="downloadFile(order.detail_file)">
           {{ order.detail_file.file_name }}
@@ -40,23 +40,23 @@
       </span>
     </p>
 
-    <p> Scheduled Time<span style="color: red">*</span>:
+    <p> Scheduled Time<span v-if="!edit" style="color: red">*</span>:
       <el-date-picker
         v-model="scheduled_time"
         type="datetime"
         value-format="timestamp"
         placeholder="Select Time" /></p>
 
-    <p> Due Time<span style="color: red">*</span>:
+    <p> Due Time<span v-if="!edit" style="color: red">*</span>:
       <el-date-picker
         v-model="due_time"
         type="datetime"
         value-format="timestamp"
         placeholder="Select Time" /></p>
 
-    <p> Subject<span style="color: red">*</span>: <el-input v-model="order.subject"> {{ order.subject }}</el-input></p>
+    <p> Subject<span v-if="!edit" style="color: red">*</span>: <el-input v-model="order.subject"> {{ order.subject }}</el-input></p>
 
-    <p> Word Count<span style="color: red">*</span>: <el-input v-model="order.word"> {{ order.word }}</el-input></p>
+    <p> Word Count<span v-if="!edit" style="color: red">*</span>: <el-input v-model="order.word"> {{ order.word }}</el-input></p>
 
     <p> Bonus: <el-input v-model="order.bonus"> {{ order.bonus }}</el-input></p>
 

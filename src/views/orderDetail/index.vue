@@ -172,19 +172,24 @@
         <el-button type="primary" @click.prevent="completeOrder()">Submit</el-button>
       </el-col>
     </el-row>
-    <el-row v-for="msg in msgList" :key="msg.id" class="message">
-      <el-col :sm="smSpan * 2" :xs="xsSpan + 4">
-        <el-alert
-          :title="msg.content"
-          type="warning"
-          close-text="delete"
-          @close="deleteMsg(msg.id)"
-        >
-          <p class="item">MessageTime: {{ msg.create_time | date }}</p>
-          <p class="item">File: <el-button v-if="msg.file" type="text" @click="downloadFile(msg.file)">{{ msg.file.file_name }}</el-button></p>
-        </el-alert>
-      </el-col>
-    </el-row>
+    <div v-if="showMsg">
+      <el-row v-for="msg in msgList" :key="msg.id" class="message">
+        <el-col :sm="smSpan * 2" :xs="xsSpan * 2 + 4">
+          <el-alert
+            type="warning"
+            close-text="delete"
+            @close="deleteMsg(msg.id)"
+          >
+            <slot name="title">
+              <span> {{ msg.user.username }}: </span>
+              <span> {{ msg.content }} </span>
+            </slot>
+            <p class="">Time: {{ msg.create_time | date }}</p>
+            <p class="">File: <el-button v-if="msg.file" type="text" @click="downloadFile(msg.file)">{{ msg.file.file_name }}</el-button></p>
+          </el-alert>
+        </el-col>
+      </el-row>
+    </div>
     <el-row>
       <el-col :sm="smSpan" :xs="xsSpan">
         <p class="item"> Writer a Message </p>
@@ -244,7 +249,8 @@ export default {
       hasSubmissionFile: false,
       submissionParams: null,
       smSpan: 6,
-      xsSpan: 8
+      xsSpan: 8,
+      showMsg: true
     }
   },
   computed: {
@@ -365,6 +371,25 @@ export default {
         getDiscussion(data).then(response => {
           this.msgList = response.data
         })
+      }).catch(err => {
+        console.log(err)
+        if (err.response.status === 403) {
+          this.$message({
+            message: 'No permission',
+            type: 'error'
+          })
+        }
+        const data = { order_id: this.order.id }
+        getDiscussion(data).then(response => {
+          console.log(response)
+          this.msgList = response.data
+          this.showMsg = false
+          this.$nextTick(() => {
+            this.showMsg = true
+          })
+          // location.reload()
+          // this.$router.go(0)
+        })
       })
     },
     formatMinutes,
@@ -381,7 +406,7 @@ export default {
   margin: 10px 0px;
 }
 p {
-  height: 40px;
+  /* height: 40px; */
   line-height: 40px;
 }
 .item {
