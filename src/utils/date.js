@@ -14,3 +14,33 @@ export function convertDate(ms) {
   const seconds = autoAdd(date.getSeconds())
   return `${year}/${month}/${day}  ${hours}:${minutes}:${seconds}`
 }
+
+export function formatMinutes(minutes) {
+  if (minutes == null || minutes === 0) {
+    return ''
+  }
+  const days = Math.floor(minutes / (60 * 24))
+  minutes %= 60 * 24
+  const hours = Math.floor(minutes / 60)
+  minutes %= 60
+  if (days > 0) {
+    return `${days} Days ${hours} Hours ${minutes} Minutes`
+  } else if (hours > 0) {
+    return `${hours} Hours ${minutes} Minutes`
+  } else {
+    return `${minutes} Minutes`
+  }
+}
+
+export function statusToString(status) {
+  if (status === 0) {
+    return 'Unassigned'
+  }
+  if (status === 1) {
+    return 'In Progress'
+  }
+  if (status === 2) {
+    return 'Submitted'
+  }
+  return ''
+}

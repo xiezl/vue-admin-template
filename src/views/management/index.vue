@@ -62,7 +62,7 @@
           <el-button type="primary" @click.prevent="submitMonth()">Submit</el-button>
           <p> Word Count this month: {{ wordCount }}</p>
           <p> Average marks this month: {{ avgMarks }}</p>
-          <p> Bonus Count this month: {{ avgMarks }}</p>
+          <p> Bonus Count this month: {{ bonusCount }}</p>
           <el-table
             v-loading="completeListLoading"
             :data="completeList"
@@ -314,6 +314,7 @@
 import { getOrderList, getAllOrder, getWriterList, changeWriterPwd, addWriter } from '@/api/table'
 import store from '@/store'
 import { count } from '@/utils/count'
+import { formatMinutes, statusToString } from '@/utils/date'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -463,34 +464,8 @@ export default {
       this.currentPage = pageNum
       this.fetchData(pageNum - 1)
     },
-    statusToString(status) {
-      if (status === 0) {
-        return 'Unassigned'
-      }
-      if (status === 1) {
-        return 'In Progress'
-      }
-      if (status === 2) {
-        return 'submitted'
-      }
-      return ''
-    },
-    formatMinutes(minutes) {
-      if (minutes == null || minutes === 0) {
-        return ''
-      }
-      const days = Math.floor(minutes / (60 * 24))
-      minutes %= 60 * 24
-      const hours = Math.floor(minutes / 60)
-      minutes %= 60
-      if (days > 0) {
-        return `${days} Days ${hours} Hours ${minutes} Minutes`
-      } else if (hours > 0) {
-        return `${hours} Hours ${minutes} Minutes`
-      } else {
-        return `${minutes} Minutes`
-      }
-    }
+    formatMinutes,
+    statusToString
   }
 }
 </script>

@@ -97,7 +97,7 @@
         <p class="item"> Overdue Time: </p>
       </el-col>
       <el-col :sm="24 - smSpan" :xs="24 - xsSpan">
-        <p> {{ order.over_due }} </p>
+        <p> {{ formatMinutes(order.over_due) }} </p>
       </el-col>
     </el-row>
     <el-row>
@@ -216,7 +216,7 @@
 
 <script>
 import { getOrderDetail, getDiscussion, getFileId, sendDiscussion, completeOrder, deleteOrder, deleteDiscussion } from '@/api/table'
-import { convertDate } from '@/utils/date'
+import { convertDate, statusToString, formatMinutes } from '@/utils/date'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -367,18 +367,8 @@ export default {
         })
       })
     },
-    statusToString(status) {
-      if (status === 0) {
-        return 'Unassigned'
-      }
-      if (status === 1) {
-        return 'In Progress'
-      }
-      if (status === 2) {
-        return 'submitted'
-      }
-      return ''
-    }
+    formatMinutes,
+    statusToString
   }
 }
 </script>
