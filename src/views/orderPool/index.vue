@@ -51,6 +51,11 @@
           {{ order.row.bonus }}
         </template>
       </el-table-column>
+      <el-table-column align="center" label="Special Requirement">
+        <template slot-scope="order">
+          <span v-if="order.row.special_requirement">{{ order.row.special_requirement }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="roles[0] === 'admin'" align="center" label="Assign Order" width="300">
         <template slot-scope="scope">
           <el-row>
