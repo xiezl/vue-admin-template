@@ -53,7 +53,7 @@
       </el-table-column>
       <el-table-column align="center" label="Special Requirement">
         <template slot-scope="order">
-          <span v-if="order.row.special_requirement">{{ order.row.special_requirement }}</span>
+          <div v-if="order.row.special_requirement" class="special">{{ order.row.special_requirement }}</div>
         </template>
       </el-table-column>
       <el-table-column v-if="roles[0] === 'admin'" align="center" label="Assign Order" width="300">
@@ -200,5 +200,10 @@ export default {
 <style scoped>
 .app-container /deep/ .el-select {
   width: 180px;
+}
+
+.special {
+  overflow-y: auto;
+  max-height: 80px;
 }
 </style>
